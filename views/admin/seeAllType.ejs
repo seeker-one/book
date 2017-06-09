@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>后台管理页面</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+
+    <link href="/stylesheets/dashboard.css" rel="stylesheet">
+    <style type="text/css">
+       body{
+        overflow-y:scroll; 
+       }
+    </style>
+  </head>
+
+  <body>
+
+    <% include header.ejs%>
+
+    <div class="container-fluid">
+      <div class="row">
+         <% include nav.ejs%>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">管理全部书籍类别</h1>
+
+          <table class="table table-hover table-bordered col-sm-7 table-condensed ">
+            <thead>            
+              <tr >
+                <th  class="col-sm-1">ID<span class='glyphicon glyphicon-pushpin'></span></th>
+                <th  class="col-sm-2">类别名<span class='glyphicon glyphicon-pushpin'></span></th>
+                <th  class="col-sm-2">修改<span class='glyphicon glyphicon-pushpin'></span></th>
+                <th  class="col-sm-2">删除<span class='glyphicon glyphicon-pushpin'></span></th>
+              </tr>            
+            </thead>
+            <tbody id='sortData'>
+              <% for(var i=0;i<data.length;i++){%>
+              <tr>
+                <td class="sortId"><%=data[i].id%></td>
+                <td class='sortName'><%=data[i].sort_name%></td>
+                <td><button type="button" class="btn btn-success btn-sm change" data-toggle="modal" data-target="#myModal">确认修改<span class='glyphicon glyphicon-pencil'></span></button></td>
+                <td><button type="button" class="btn btn-danger btn-sm delete">删除<span class='glyphicon glyphicon-trash'></span></button></td>
+              </tr>
+              <% }%>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" id="myModal" role="dialog" aria-labelledby="gridSystemModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="gridSystemModalLabel">修改书籍类别</h4>
+          </div>
+          <!-- 存放序号 -->
+          <span id="num" style="display: none;"></span>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-2">ID</div>
+              <div class="col-md-5" id='sortId'></div>
+            </div>
+            <div class="row">
+              <div class="form-group">
+                  <label class="col-md-2 control-label">
+                      类别：
+                  </label>
+                  <div class="col-md-5">
+                      <input type="text" class="form-control" placeholder="请输入类别名……"  id="typeName" name="typeName" required autofocus="">
+                  </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" id="changeSortName">确认修改</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <script src="/javascripts/jquery.min.js"></script>
+    <script src="/javascripts/bootstrap.js"></script>
+    <script>
+       $(function(){
+           for(var i=0;i<$('.sortId').length;i++){
+              (function(j){   
+               // 删除类别
+                $('.delete').eq(j).click(function(){
+                  if(confirm('确认要删除这个类别么？')){
+                      var sortId=$('.sortId').eq(j).html();
+                      $.ajax({
+                          url:'/admin/seeAllType',
+                          type:'post',
+                          data:{
+                             act:'del',
+                             id:sortId
+                          },
+                          success:function(data){
+                              alert(data.msg);
+                              if(data.code==1){
+                                   $('.delete').eq(j).parent().parent().remove();
+                                
+                              }
+                              window.location.href='/admin/seeAllType'
+                          },
+                          error:function(){
+
+                          }
+                      })
+                  }
+                   
+                })                    
+              })(i)
+           }
+         
+          // 模态框赋值
+            for(var i=0;i<$('.sortId').length;i++){
+              (function(k){
+                   $('.change').eq(k).click(function(){
+                   $('#sortId').html($('.sortId').eq(k).html())
+                   $('#typeName').val($('.sortName').eq(k).html()); 
+                   $('#num').html(k);
+                  })        
+              })(i)
+            }
+            
+            $('#changeSortName').click(function(event){
+               $.ajax({
+                   url:'/admin/seeAllType',
+                   type:'post',
+                   data:{
+                     act:'change',
+                     id:$('#sortId').html(),
+                     sortName:$('#typeName').val()
+                   },
+                   success:function(data){
+                     
+                      if(data.code==1){
+                        $('.sortName').eq($('#num').html()).html($('#typeName').val());
+                        $('#myModal').css('display','none');
+                        $('.modal-backdrop').css('display','none');
+                        alert(data.msg)
+                      }
+
+                   }
+               })
+               
+            })
+
+           
+       })
+
+        $(function(){
+            $("ul#nav li").eq(1).attr('class','active');
+        })
+    </script>
+  </body>
+</html>

@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>后台管理页面</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+
+    <link href="/stylesheets/dashboard.css" rel="stylesheet">
+     <style type="text/css">
+       body{
+        overflow-y:scroll; 
+       }
+    </style>
+  </head>
+
+  <body>
+
+    <% include header.ejs%>
+
+    <div class="container-fluid">
+      <div class="row">
+         <% include nav.ejs%>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+              <h1 class="page-header">账户管理</h1>
+              <p style="color:red;">shop代表商家卖书;commonAdmin代表普通管理员</p>
+              <table class="table table-hover table-bordered  table-condensed " style="width:600px;">
+                <thead>            
+                  <tr >
+                   <th class="col-lg-1">序号<span class='glyphicon glyphicon-pushpin'></span></th>
+                   <th class="col-lg-1">用户名<span class='glyphicon glyphicon-pushpin'></span></th>
+                   <th class="col-lg-1">类别<span class='glyphicon glyphicon-pushpin'></span></th>
+                   <th class="col-lg-1">删除<span class='glyphicon glyphicon-pushpin'></span></th>
+                  </tr>            
+                </thead>
+                <tbody >
+                  <% for(var i=0;i<userData.length;i++){%>
+                  <tr>
+                    <td class="user_num"><%=i+1 %></td>
+                    <td style="display: none;" class="userId"><%=userData[i].user_id%></td>
+                    <td class="username"><%= userData[i].username%></td>
+                    <td class="username"><%= userData[i].user_type%></td>
+                    <td><button type="button" class="btn btn-danger btn-sm delete">删除<span class='glyphicon glyphicon-trash'></span></button></td>
+                  </tr>
+                  <% }%>
+                </tbody>
+              </table>
+        </div>
+      </div>
+    </div>
+
+    <script src="/javascripts/jquery.min.js"></script>
+    <script src="/javascripts/bootstrap.js"></script>
+    <script type="text/javascript">
+        $(function(){
+          // 删除账户
+            for(var i=0;i<$('.userId').length;i++){
+              (function(j){
+                 $('.delete').eq(j).click(function(){
+                   if(confirm('确认要删除这个账户么？')){
+                        $.ajax({
+                         url:'/admin/seeAllAdmin',
+                         type:'post',
+                         data:{
+                           act:'del',
+                           id:$('.userId').eq(j).html()
+                         },
+                         success:function(data){
+                             alert(data.msg);
+                             if(data.code==1){
+                                $('.delete').eq(j).parent().parent().remove();
+
+                             }
+                              window.location.href='/admin/seeAllAdmin'
+                         }
+                        })
+                   }     
+                 })                
+              })(i)
+            }
+
+        })
+
+        $(function(){
+            $("ul#nav li").eq(5).attr('class','active');
+        })
+    </script>
+  </body>
+</html>

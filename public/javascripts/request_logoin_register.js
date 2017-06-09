@@ -1,0 +1,23 @@
+ $(function(){
+        //注册事件
+        $('#reg').click(function(){
+             $('.mask').css('display','block');
+             $('#register_mask').css('display','block');
+            $("#register_mask").load("./register.html?t="+Math.random());
+        })
+        //登录事件
+         $('#log_in').click(function(){
+            //灰色浮层
+             $('.mask').css('display','block');
+             //显示登录div
+             $('#register_mask').css('display','block');
+             //引入页面
+            $("#register_mask").load("./login.html?t="+Math.random());
+        })
+         //点击取消
+        $('.mask').click(function(){
+             $('.mask').css('display','none');
+             $('#register_mask').css('display','none');
+        })
+       
+      })

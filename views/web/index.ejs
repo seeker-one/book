@@ -1,0 +1,183 @@
+ <html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <link href="/stylesheets/index.css" rel="stylesheet">
+    <link href="/stylesheets/book_detail.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <!-- 分页插件 -->
+    <link href="/stylesheets/page.css" rel="stylesheet">
+     <style type="text/css">
+        .row{
+          margin-bottom: 20px;
+        }
+        #new:hover{
+           background-color: #65C9B2;
+           color: #fff;
+        }
+        #page{
+          clear: left;
+          margin:50px auto 0px;
+          width: 500px;
+        }
+     </style>
+  </head>
+  <body>
+      <!-- header头部搜索  注册  登录 -->
+    <header class="ease" id="head">
+  		<a href="">
+  		   <img class="logo ease" alt="" src="/images/logo.png">
+  		</a>
+  
+      <% include header.ejs%>
+    </header>
+
+    <div id="con_box">
+       <!-- 侧边导航栏 -->
+       <div id="navbar" class="ease">
+        <div id="position">
+          <span class="glyphicon glyphicon-map-marker"></span>
+          <p><a href="http://www.xiyou.edu.cn/">西安邮大学</a></p>
+        </div>
+       	<ul id="menu">
+          <% for(var i=0;i<sortData.length;i++){%>
+       		<li><a href="/book_searchKind?sortName=<%= sortData[i].sort_name%>"> <%= sortData[i].sort_name%></a></li>
+       		
+          <% }%>
+       	</ul>
+       </div>
+
+       <!-- 右侧书籍展示 -->
+       <div id="index_con" style="height:auto !important;">
+          <div class="title">
+            <p>推荐书籍</p>
+          </div>
+          <div id="need">
+            <p class="block" style="cursor: pointer;" id="new">最新上架</p>
+           
+            <p style="cursor: pointer;margin-left: 100px;" id="hot"><img src="/images/remark.png" alt="书籍是人类进步的阶梯" title="书籍是人类进步的阶梯"></p>
+          </div>
+          <ul id="book_con"> 
+
+          </ul>
+
+          <!-- 分页 -->
+          <span id="pageCount" style="display: none;"></span>
+          <div>
+            <ul class="page" maxshowpageitem="5" pagelistcount="16"  id="page"></ul>
+          </div>
+        </div>
+       <!--  <div style="position:absolute;left:1170px;top:160px;width: 300px;
+        height: 200px;background-color: red;">
+        </div> -->
+
+        <div id="footer" style="background:url('/images/footer-bg.png');">
+           <h3 style="text-align: center;color:#FFB200">友情链接</h3>
+           <p  style="text-align: center;">
+             <a href="http://www.xiyou.edcolor:#FFB200u.cn/" target="_blank" style="margin-right: 50px;">西安邮电大学</a>
+             <a href="http://222.24.19.3:81/xiyoucs/index.asp" target="_blank">西安邮电大学计算机学院</a>
+           </p>
+        </div>
+        <div id="toTop"><img src="/images/top.png" alt=""></div>
+    </div>  
+
+    <!-- 注册  登录 -->
+    <% include modal.ejs%>
+
+
+    <script src="/javascripts/jquery.min.js"></script>
+    <script src="/javascripts/bootstrap.js"></script>
+  <script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+    <!--  窗口滚动导航缩放-->
+    <script type="text/javascript" src="/javascripts/scroll.js"></script>
+    <!--分页插件  -->
+    <script type="text/javascript" src="/javascripts/page.js"></script>
+
+    <!-- 返回最新书籍 -->
+    <script type="text/javascript">
+      function requestBook(act){
+          $.ajax({
+             url:'/',
+             type:'POST',
+             data:act,
+             success:function(data){
+               $('#book_con').children().remove();
+                for(var i=0;i<data.data.length;i++){
+                   $('#book_con').append('<li>\
+                    <a href="" class="link"><img src="" alt="">\
+                    <p class="book_name"></p>\
+                    <p><span>分类:</span><span class="sort"></span><span>售价:¥</span><span class="price"></span></p></a>\
+                  </li>')
+                };   
+
+                for(var i=0;i<data.data.length;i++){
+                     $('#book_con li .link').eq(i).attr('href','/book_detail?id='+data.data[i].book_id)
+                     $('#book_con li img').eq(i).attr('src','/upload/'+data.data[i].image_src);
+                     $('#book_con li .book_name').eq(i).html(data.data[i].book_name);
+                     $('#book_con li .sort').eq(i).html(data.data[i].sort);
+                     $('#book_con li .price').eq(i).html(data.data[i].price);
+                }
+             }
+          })
+      }
+
+      $(function(){
+        // 获取最新书籍
+        requestBook({act:'new',pageNum:1})
+    
+      })
+    </script>
+
+    <!--请求书籍总数 -->
+    <script>
+      $(function(){
+         $.ajax({
+            url:'/querySum',
+            type:"POST",
+            data:{
+
+            },
+            success:function(data){
+
+               $("#page").initPage(parseInt(data.pageCount[0].sum),1,GG.kk);   
+            }
+         })
+      })
+    </script>
+    
+    <!-- 分页数据请求 -->
+     <script type="text/javascript">
+        var GG = {
+            "kk":function(num){
+               requestBook({act:'new',pageNum:num})
+            }
+          }
+     </script>
+
+    <!-- 回到顶部 -->
+    <script>
+      $(function(){
+        $(window).scroll(function(){
+          if($(document).scrollTop()>600){      
+             $("#toTop").css('display',"block")
+          }
+          else{
+             $("#toTop").css('display',"none")
+          }
+        })
+
+        $('#toTop').click(function(){
+             $('body').animate({ scrollTop: 0 }, 500);  
+        })
+      })
+    </script>
+
+   <!-- 商家登录注册 -->
+    <script src="/javascripts/shop_register_login.js"></script>
+</body>
+</html>
+

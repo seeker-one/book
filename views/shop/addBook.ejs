@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>后台管理页面</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+
+    <link href="/stylesheets/dashboard.css" rel="stylesheet">
+    <style type="text/css">
+       html,body{
+
+        overflow-x: hidden;
+       }
+    </style>
+  </head>
+
+  <body>
+
+    <% include header.ejs%>
+
+    <div class="container-fluid">
+      <div class="row">
+         <% include nav.ejs%>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">添加书籍</h1>
+
+          <div class="row placeholders">
+           
+              <div class="row">
+                <form class="form-horizontal" role="form"  method="POST"  enctype='multipart/form-data' >
+                      <div class="form-group">
+                          <label class="col-md-2 control-label">
+                              书名：
+                          </label>
+                          <div class="col-md-5">
+                              <input type="text" class="form-control" placeholder="请输入书名……" ng-model="bookName" id="bookName" name="bookName" required autofocus="">
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="col-md-2 control-label">
+                              作者：
+                          </label>
+                          <div class="col-md-5">
+                              <input type="text" class="form-control" placeholder="请输入作者……"  id="writer" name="writer">
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="col-md-2 control-label">
+                              价格：
+                          </label>
+                          <div class="col-md-5">
+                              <input type="text" class="form-control" placeholder="请输入价格……"  id="price" name="price" required autofocus="">
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="col-md-2 control-label">
+                              类别：
+                          </label>
+                          <div class="col-md-5">
+                              <select id="sortName" class="selectpicker show-tick form-control" >
+                                  <% for(var i=0;i<type.length;i++){%>
+                                   <option  value="<%= type[i].sort_name%>"><%= type[i].sort_name%></option>
+                                  <% }%>
+                              </select>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="col-md-2 control-label">
+                              出版社：
+                          </label>
+                          <div class="col-md-5">
+                              <input type="text" class="form-control" placeholder="请输入出版社……"  id="pubCompany" name="pubCompany">
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="col-md-2 control-label">
+                              数量：
+                          </label>
+                          <div class="col-md-5">
+                              <input type="number" class="form-control" placeholder="请输入总数量……"  id="sum" name="sum">
+                          </div>
+                      </div>
+                     
+                      <div class="form-group">
+                          <label class="col-md-2 control-label">
+                            封面图片:
+                          </label>
+                          <div class="col-md-5">
+                              <input type="file" class="form-control"   id="bookImage" name="bookImage">
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="col-md-2 control-label">
+                              简要介绍：
+                          </label>
+                          <div class="col-md-5">
+                              <textarea class="form-control" rows="4" placeholder="请输入简要介绍……" id="brief" name="brief"></textarea>
+                             <!--  <input type="text" id="brief" class="form-control" rows="4" placeholder="请输入简要介绍……" style="height:80px;"> -->
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="col-md-offset-2 col-md-5">
+                              <input class="btn btn-primary" type="button"  id="addBook" value="添加">
+                              <input class="btn btn-default" type="reset">
+                          </div>
+                      </div>
+                  </form>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/javascripts/jquery.min.js"></script>
+    <script src="/javascripts/bootstrap.js"></script>
+    <script src="/javascripts/ajaxfileupload.js"></script>
+    <script>
+      $("#nav li").eq(0).attr('class','active');
+    </script>
+    <script>
+      $(function(){
+      $("#addBook").click(function(){
+        $.ajaxFileUpload({
+                url:"/shop/addBook",   //用于文件上传的服务器端请求地址
+                type:'POST',
+                secureuri:false,//一般设置为false
+                data:{
+                   book_name:$('#bookName').val(),
+                   book_author:$("#writer").val(),
+                   price:$("#price").val(),
+                   sortName:$("#sortName").val(),
+                   publish:$("#pubCompany").val(),
+                   // publish_date:$("#pubDate").val(),
+                   count:$("#sum").val(),
+                   summary:$('#brief').val()
+                },
+                fileElementId:'bookImage',//文件上传控件的id属性 
+                 dataType: 'JSON', //返回值类型 一般设置为json
+                success: function (data)  //服务器成功响应处理函数
+                {
+                     alert(data);
+                     $('#bookName').val('');
+                     $("#writer").val('');
+                     $("#price").val('');
+                     $("#pubCompany").val('');
+                     $("#sum").val('');
+                     $('#brief').val('');
+                     $('#bookImage').val('')
+
+                },
+                error: function (data, status, e)//服务器响应失败处理函数
+                {     
+                    alert(e);
+                }
+            });
+        return false;
+     })      
+   })
+    </script>
+  </body>
+</html>

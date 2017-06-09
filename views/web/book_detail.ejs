@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <link href="/stylesheets/index.css" rel="stylesheet">
+    <link href="/stylesheets/book_detail.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+        .row{
+          margin-bottom: 20px;
+        }
+
+        #summary{
+            width: 900px;
+            height: 100px;
+            background-color: #fff;
+            margin:50px auto ;
+        }
+        #yin{
+            position: relative;
+            top: 10px;
+            left: 20px;
+        }
+        .brief{
+              position: relative;
+              left: 40px;
+              top:20px;
+              font-size: 18px;
+        }
+        #comment{
+            width: 900px;
+            margin:0px auto;
+           
+
+        }
+        
+        #commentLeft{
+            width: 550px;
+            background-color: #fff;
+            min-height: 250px;
+            height: auto;
+            float: left;
+        }
+        #commentLeft p.title{
+            width: 80px;
+            height: 35px;
+            text-align: center;
+            line-height: 35px;
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+            background-color:#64CBB3; 
+           
+        }
+        #commentLeft .photo{
+            width: 50px;
+            height: 50px;
+            margin-left: 30px;
+            border-radius: 50%;
+            margin-right: 50px;
+        }
+        #commentLeft li{
+            min-height: 80px;
+        }
+        
+        .discuss_con{
+            color:#64CBB3;
+        }
+        
+        .iSpeak{
+            margin-left: 80px;
+            color: #64CBB3;
+            font-size:15px; 
+        }
+        #concat_email{
+            width:400px;
+            border:1px solid #64CBB3;
+            margin-left: 80px;
+            height: 40px;
+            resize: none;
+            border-radius: 5px;
+
+        }
+        #reply{
+            width:400px;
+            border:1px solid #64CBB3;
+            margin-left: 80px;
+            height: 80px;
+            resize: none;
+            border-radius: 5px;
+        }
+        #commentBtn{
+            float: right;
+            width: 80px;
+            height: 35px;
+            border:none;
+            background-color:#64CBB3;
+            color: #fff;
+            margin-right: 70px; 
+        }
+
+        #ads{
+            float: left;
+            width: 330px;
+            margin-left: 20px;
+            background-color: #fff;
+        }
+        h3{
+            text-align: center;
+            color:#64CBB3;
+            font-weight: bold;
+        }
+        #ads ul li{
+            width: 140px;
+            margin-left: 10px;
+            margin-right: 10px;
+            margin-top: 25px;
+            height: 100px;
+            float: left;
+            border:1px solid #fff;
+        }
+        #ads ul li:last-child{
+           margin-bottom: 25px;
+        }
+        #ads ul li img{
+            width: 140px;
+            height: 100px;
+            border:1px solid #ccc;
+        }
+
+        .taobao{
+            cursor: pointer;
+            width: 25px;
+            height: 25px;
+            margin-left: 10px;
+        }
+        .link_other{
+            text-decoration: none;
+        }
+       
+    </style>
+  </head>
+  <body style=" background-color: #E3EEEC">
+    <header class="ease" id="head">
+      <% include header.ejs%>
+    </header>
+    <div id="job_mainbody">
+    	<div class="job_infor">
+    		<div class="job_pic">
+    			<img src="/upload/<%=bookData.image_src%>" class="job_pic">
+    		</div>
+    		<div class="infors">
+                <span style="display: none;" id="bookId"><%=bookData.book_id%></span>
+    			<table>
+    				<tr>
+    					<td colspan="2" class='bookName itemCon'><%=bookData.book_name%>
+                         <a href="https://s.taobao.com/search?q=<%=bookData.book_name%><%= bookData.book_author%><%= bookData.publish%>" target="_blank" class="link_other">
+                            <img src="/images/taobao.png" title="去淘宝看看此书" class="taobao">
+                         </a>
+                         <a href="http://search.dangdang.com/?key=<%=bookData.book_name%>&act=input" target="_blank" class="link_other">
+                            <img src="/images/dangdang.jpg" title="去当当看看此书" class="taobao">
+                         </a>
+                         </td>
+    				</tr>
+                    <tr>
+                        <td class='itemName'>作者:</td>
+                        <td class="itemCon"><%= bookData.book_author%></td>
+                    </tr>
+    				<tr >
+    					<td class='itemName'>分类:</td>
+    					<td class="itemCon"><%= bookData.sort%></td>
+    				</tr>
+    				<tr>
+    					<td class='itemName'>出版社:</td>
+    					<td class="itemCon"><%= bookData.publish%></td>
+    				</tr>
+    				<tr>
+                        <td class='itemName'>发布时间:</td>
+                        <td class="itemCon" id="time"><%= bookData.publish_date%></td>
+                    </tr>
+    				<tr>
+    					<td class='itemName'>售价:</td>
+    					<td class="itemCon book_price">¥<%= bookData.price%></td>
+    				</tr>
+    				<tr>
+    					<td class='itemName'>联系方式:</td>
+    					<td class="itemCon"><%=bookData.username%></td>
+    				</tr>
+    			</table>
+    		</div>
+    	</div>
+
+        <div id="summary">
+            <img src="/images/yin.png" alt="" id="yin">
+            <span class="brief"><%= bookData.summary%></span>
+        </div>
+        <div id="comment">  
+           <div id="commentLeft">
+               <p class="title">留言</p>
+               <ul id="commentData">
+                   
+               </ul>
+               <form action="">
+                <p class="iSpeak">我来说:</p>
+                <p><input type="text" placeholder="请输入一个正确的联系邮箱......" required="" id="concat_email"></p>
+                <p><textarea name="" id='reply' placeholder="请可观输入你的评价..."></textarea></p>
+                <input type="button" value="评价" id="commentBtn" class="title"> 
+               </form>
+              
+           </div>
+           <div id="ads">
+               <!-- <h3>广告区</h3> -->
+               <ul>
+                 <% for(var i=0;i<adData.length;i++){%>
+                   <li>
+                    <a href="<%=adData[i].ad_href%>" target="_blank">
+                      <img src="/upload/<%=adData[i].ad_img%>" alt="" title="<%=adData[i].ad_text%>">
+                    </a>
+                   </li>
+                 <%}%>
+               </ul>
+           </div>
+           
+        </div>
+    </div>
+
+      <!-- 注册  登录 -->
+    <% include modal.ejs%>
+
+    <script src="/javascripts/jquery.min.js"></script>
+    <script src="/javascripts/bootstrap.js"></script>
+
+     <!--  窗口滚动导航缩放-->
+    <script type="text/javascript" src="/javascripts/scroll.js"></script>
+    <!-- 商家登录注册 -->
+    <script src="/javascripts/shop_register_login.js"></script>
+    
+    <!-- 时间字符串格式化 -->
+    <script>
+        $(function(){
+            var time=parseInt($('#time').text());
+            var unixTimestamp = new Date( time ) ;
+             commonTime = unixTimestamp.toLocaleString();
+             var last=commonTime.indexOf(' ');
+           $('#time').html(commonTime.substring(0,last))
+        })
+    </script>
+
+    <!-- 发表留言 -->
+    <script>
+        $(function(){
+             $('#commentBtn').click(function(){
+                 $.ajax({
+                    url:'/book_detail/comment',
+                    type:"POST",
+                    data:{
+                         book_id:$("#bookId").html(),
+                         email:$("#concat_email").val(),
+                         content:$("#reply").val()
+                    },
+                    success:function(data){
+                        alert(data);
+                        queryComment()
+                    }
+                 })
+             })
+        })
+    </script>
+
+    <!--请求留言  -->
+    <script>
+
+      function queryComment(){
+        $.ajax({
+                url:'/book_detail/queryComment',
+                type:'POST',
+                data:{
+                    book_id:$('#bookId').html()
+                },
+                success:function(data){
+                    $('#commentData').children().remove();
+                    for(var i=0;i<data.commentData.length;i++){
+                        $('#commentData').append('\
+                        <li>\
+                         <img src="/images/comment.jpg" alt="" class="photo"> \
+                         <span class="name"></span>说:\
+                         <span class="discuss_con"></span>\
+                        </li>')
+                    }
+
+                    for(var i=0;i<data.commentData.length;i++){
+                       $('.name').eq(i).html(data.commentData[i].email)
+                       $('.discuss_con').eq(i).html(data.commentData[i].content)
+                    }
+                }
+             })
+
+      }
+        $(function(){
+             queryComment()
+        })
+    </script>
+  </body>
+</html>

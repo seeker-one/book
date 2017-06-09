@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title><%= title%></title>
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/stylesheets/signin.css" rel="stylesheet"/>
+    <script src="/javascripts/jquery.min.js"></script>
+    
+</head>
+
+<body >
+
+<div class="container" >
+
+    <form action="" method="post" class="form-signin">
+        <h2 class="form-signin-heading">校园二手书街管理系统</h2>
+        <input type="text" name="username" id="username" class="form-control" placeholder="用户名" required autofocus>
+        <input type="password" name="password" id="password" class="form-control"  placeholder="密码" required>
+        <div id="dept">
+            <label class="radio-inline">
+            部门:
+            </label>
+            <label class="radio-inline" >
+                <input type="radio"  id="super_admin" value="super" checked> 超级管理员
+            </label>
+            <label class="radio-inline">
+                <input type="radio" id="common_admin" value="common"> 普通管理员
+            </label>
+        </div>
+       
+        <button class="btn btn-lg btn-primary btn-block" id="submitBtn" type="button" >登录</button>
+    </form>
+
+</div>
+
+
+   <script type="text/javascript">
+       
+    $(function(){
+        
+        $("#submitBtn").click(function(){
+            // 获取用户名和密码
+            var name=$('#username').val();
+            var pass=$('#password').val();
+           $.ajax({
+              url:'/admin/login',
+              type:"post",
+              data:{
+                username:name,
+                password:pass
+              },
+              success:function(data){
+                 
+                  if(data=='ok'){
+                      window.location.href='http://localhost:8080/admin';
+                  }
+                  else{
+                     alert(data);
+                  }
+              },
+              error:function(err){
+                 console.log(err);
+              }
+
+           })
+       })
+        
+    })
+        
+   </script>
+</body>
+</html>
+
+

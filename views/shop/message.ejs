@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>后台管理页面</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+
+    <link href="/stylesheets/dashboard.css" rel="stylesheet">
+     <style type="text/css">
+       body{
+        overflow-y:scroll; 
+       }
+       .row{
+        margin-bottom: 30px;
+       }
+       .message{
+          width: 600px;
+          border:1px solid #428BCA;
+          min-height: 150px;
+          resize: none;
+          border-radius: 5px;
+
+       }
+       .titleItem,.dateItem{
+          font-size: 16px;
+          font-weight: bold;
+       }
+    </style>
+  </head>
+
+  <body>
+
+    <% include header.ejs%>
+
+    <div class="container-fluid">
+      <div class="row">
+         <% include nav.ejs%>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+            <!-- 消息中心 -->
+            <h1 class="page-header">消息中心</h1>
+            <% for(var i=0;i<messageData.length;i++){%>
+            <div class="row">
+                <p class="titleItem">
+                    <span>标题：</span><span class="title"><%=messageData[i].news_title%></span>
+                    <span style="margin-left: 100px;">类型：</span><span class="receiver"><%=messageData[i].receiver%></span>
+                </p>
+                <p class="dateItem"><span>发布时间:</span><span class="date"><%=messageData[i].date%></span></p>
+                <p name="" id="" class="message" ><%=messageData[i].news_con%></p>
+            </div>
+            <% }%>
+        </div>
+      </div>
+    </div>
+
+    <script src="/javascripts/jquery.min.js"></script>
+    <script src="/javascripts/bootstrap.js"></script>
+    <script>
+      $("#nav li").eq(3).attr('class','active');
+    </script>
+    
+    <script>
+        $(function(){
+          // <!-- 时间字符串格式化 -->
+            var time=[];
+            var commonTime=[];
+            var last=[];
+            var unixTimestamp=[]
+            for(var i=0;i<$('.date').length;i++){
+              time[i]=parseInt($('.date').eq(i).html());
+              console.log(time[i])
+              unixTimestamp[i] = new Date( time[i] ) ;
+              commonTime[i] = unixTimestamp[i].toLocaleString();
+              // last[i]=commonTime[i].indexOf(' ');
+              $('.date').eq(i).html(commonTime[i])
+            }
+
+          // 消息类型格式化
+           var receiver=[];
+           for(var i=0;i<$('.receiver').length;i++){
+              receiver[i]=$('.receiver').eq(i).html();
+              if( $.trim(receiver[i])=='all'){
+                $('.receiver').eq(i).html('系统通知');
+              }
+              else{
+                 $('.receiver').eq(i).html('私发');
+              }
+           }
+
+
+
+        })
+    </script>
+  </body>
+</html>

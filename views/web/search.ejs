@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <link href="/stylesheets/index.css" rel="stylesheet">
+    <link href="/stylesheets/book_detail.css" rel="stylesheet">
+    <link href="/stylesheets/search.css" rel="stylesheet">
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+        .row{
+          margin-bottom: 20px;
+        }
+    </style>
+  </head>
+  <body style=" background-color: #E3EEEC">
+    <header class="ease" id="head">
+      <% include header.ejs%>
+    </header>
+    <div id="search_box">
+        <ul id="search_title">
+            <li id="default">默认</li>
+            <li id="time">时间<span class="glyphicon glyphicon-arrow-up" id="time_up"></span>
+            <span class="glyphicon glyphicon-arrow-down" id="time_down"></span>
+            </li>
+            <li id="hots">价格<span class="glyphicon glyphicon-arrow-up" id='price_up'></span>
+            <span class="glyphicon glyphicon-arrow-down" id='price_down'></span></li>
+        </ul>
+        <ul id="book_con">
+          <% if(bookData.length>0){%>
+            <% for(var i=0;i<bookData.length;i++){%>
+            <li>
+              <a href="/book_detail?id=<%=bookData[i].book_id%>" class="link">
+              <img src="/upload/<%=bookData[i].image_src%>" alt="">
+              <p class="book_name"><%=bookData[i].book_name%></p>
+              <p  class="time" style="display: none;"><%=bookData[i].publish_date%></p>
+              <p>
+                 <span>分类:</span><span class="sort"><%=bookData[i].sort%></span>
+                 <span>售价:¥</span><span class="price"><%=bookData[i].price%></span>
+               </p>
+              </a>
+            </li>
+            <% }%>
+          <% }else{ %>
+               <p style="text-align:center;font-size:55px;color:#fff;"><img src="/images/cry.png" alt="没有该书籍">您要找的书籍还未上架!</p>
+          <% }%>
+        </ul>
+    </div>
+    <div class="footer" style="background:url('/images/footer-bg.png');">
+      
+    </div>
+    <!-- 注册  登录 -->
+    <% include modal.ejs%>
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="/javascripts/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/javascripts/bootstrap.js"></script>
+
+     <!--  窗口滚动导航缩放-->
+    <script type="text/javascript" src="/javascripts/scroll.js"></script>
+
+    <script src="/javascripts/shop_register_login.js"></script>
+  
+    <!-- 排序 -->
+    <script>
+
+        window.onload = function() {  
+                var priceUp = document.getElementById("price_up");  
+                var oUl = document.getElementById("book_con");  
+                priceUp.onclick = function() {  
+                    var aLi = oUl.getElementsByTagName("li");  
+                    var arr = [];  
+                    var i = 0;  
+                    //1、转成数组  
+                    for (i = 0; i < aLi.length; i++) {  
+                        arr[i] = aLi[i];  
+                    }  
+
+                    //2、数组排序  
+                    arr.sort(function(li1, li2) {  
+                        return parseInt(li1.getElementsByClassName('price')[0].innerHTML) - parseInt(li2.getElementsByClassName('price')[0].innerHTML);  
+                    });  
+                    //3、重新插入  
+                    for (i = 0; i < arr.length; i++) {  
+                        oUl.appendChild(arr[i]);  
+                        //父节点.appendChild()的实现，会把这个元素节点从ul里面删除，然后在加入。 
+                    }  
+                }  
+
+
+                var priceDown = document.getElementById("price_down");  
+                var oUl = document.getElementById("book_con");  
+                priceDown.onclick = function() {  
+                    var aLi = oUl.getElementsByTagName("li");  
+                    var arr = [];  
+                    var i = 0;  
+                    //1、转成数组  
+                    for (i = 0; i < aLi.length; i++) {  
+                        arr[i] = aLi[i];  
+                    }  
+
+                    //2、数组排序  
+                    arr.sort(function(li2, li1) {  
+                        return parseInt(li1.getElementsByClassName('price')[0].innerHTML) - parseInt(li2.getElementsByClassName('price')[0].innerHTML);  
+                    });  
+                    //3、重新插入  
+                    for (i = 0; i < arr.length; i++) {  
+                        oUl.appendChild(arr[i]);  
+                        //父节点.appendChild()的实现，会把这个元素节点从ul里面删除，然后在加入。 
+                    }  
+                } 
+
+                var timeUp = document.getElementById("time_up");  
+                var oUl = document.getElementById("book_con");  
+                timeUp.onclick = function() {  
+                    var aLi = oUl.getElementsByTagName("li");  
+                    var arr = [];  
+                    var i = 0;  
+                    //1、转成数组  
+                    for (i = 0; i < aLi.length; i++) {  
+                        arr[i] = aLi[i];  
+                    }  
+
+                    //2、数组排序  
+                    arr.sort(function(li1, li2) {  
+                        return parseInt(li1.getElementsByClassName('time')[0].innerHTML) - parseInt(li2.getElementsByClassName('time')[0].innerHTML);  
+                    });  
+                    //3、重新插入  
+                    for (i = 0; i < arr.length; i++) {  
+                        oUl.appendChild(arr[i]);  
+                        //父节点.appendChild()的实现，会把这个元素节点从ul里面删除，然后在加入。 
+                    }  
+                }   
+
+                var timeDown = document.getElementById("time_down");  
+                var oUl = document.getElementById("book_con");  
+                timeDown.onclick = function() {  
+                    var aLi = oUl.getElementsByTagName("li");  
+                    var arr = [];  
+                    var i = 0;  
+                    //1、转成数组  
+                    for (i = 0; i < aLi.length; i++) {  
+                        arr[i] = aLi[i];  
+                    }  
+
+                    //2、数组排序  
+                    arr.sort(function(li2, li1) {  
+                        return parseInt(li1.getElementsByClassName('time')[0].innerHTML) - parseInt(li2.getElementsByClassName('time')[0].innerHTML);  
+                    });  
+                    //3、重新插入  
+                    for (i = 0; i < arr.length; i++) {  
+                        oUl.appendChild(arr[i]);  
+                        //父节点.appendChild()的实现，会把这个元素节点从ul里面删除，然后在加入。 
+                    }  
+                }   
+            }  
+    </script>
+
+  </body>
+</html>
